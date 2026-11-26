@@ -31,7 +31,7 @@ window.ikeaFinancialData = {
 
         {
             category: "Total Operating Income",
-            fy24: 26.5,
+            fy24: 26.538,
             fy25: 26.306,
             fy26: 25.864,
             absoluteChange: -0.442,
