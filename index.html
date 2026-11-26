@@ -1,0 +1,1205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Inter IKEA Group FY24–FY26 Financial Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="data.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 270px;
+        }
+
+        .pie-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+        }
+
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .financial-grid .section-card {
+            min-width: 0;
+        }
+
+        .section-card {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            min-width: 0;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        .net-result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .net-result-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 240px;
+            }
+
+            .pie-container {
+                height: 250px;
+            }
+
+            .financial-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .net-result-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            main {
+                max-width: 100% !important;
+                padding: 8px !important;
+            }
+
+            section, .section-card {
+                break-inside: avoid;
+            }
+
+            .shadow-sm, .shadow-md {
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+<header class="bg-blue-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold">
+                Inter IKEA Group Financial Dashboard
+            </h1>
+
+            <p class="text-blue-200 text-sm mt-1">
+                Financial Performance Comparison: FY2024–FY2026
+            </p>
+        </div>
+
+        <div class="bg-blue-800 px-4 py-2 rounded-lg text-sm border border-blue-700">
+            <strong>Sample Size (N):</strong> 3 Years |
+            <strong>Source:</strong> FY26 Annual Report
+        </div>
+
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 md:px-6 py-5 space-y-5">
+
+    <!-- KEY FINANCIAL METRICS -->
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div class="section-card">
+            <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                Worldwide IKEA Retail Sales
+            </p>
+
+            <p class="text-2xl font-bold text-slate-900 mt-2">
+                €43.8B
+            </p>
+
+            <p class="text-xs text-red-600 mt-1 font-medium">
+                FY26 | ▼ €0.8B vs FY25
+            </p>
+        </div>
+
+        <div class="section-card">
+            <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                Total Operating Income
+            </p>
+
+            <p class="text-2xl font-bold text-slate-900 mt-2">
+                €25.864B
+            </p>
+
+            <p class="text-xs text-red-600 mt-1 font-medium">
+                FY26 | ▼ 1.68% vs FY25
+            </p>
+        </div>
+
+        <div class="section-card">
+            <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                Net Profit
+            </p>
+
+            <p class="text-2xl font-bold text-slate-900 mt-2">
+                €1.40B
+            </p>
+
+            <p class="text-xs text-red-600 mt-1 font-medium">
+                FY26 | ▼ 6.48% vs FY25
+            </p>
+        </div>
+
+        <div class="section-card">
+            <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                Operating Margin
+            </p>
+
+            <p class="text-2xl font-bold text-slate-900 mt-2">
+                5.64%
+            </p>
+
+            <p class="text-xs text-red-600 mt-1 font-medium">
+                FY26 | ▼ 0.92 pp vs FY25
+            </p>
+        </div>
+
+    </section>
+
+    <!-- TOP ROW: OPERATING INCOME AND RETAIL SALES -->
+
+    <section class="financial-grid">
+
+        <div class="section-card">
+
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Total Operating Income (€B)
+            </h2>
+
+            <p class="text-sm text-slate-600 mb-3">
+                Comparison of total operating income across FY2024–FY2026.
+            </p>
+
+            <div class="chart-container">
+                <canvas id="salesGoodsChart"></canvas>
+            </div>
+
+        </div>
+
+        <div class="section-card">
+
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Worldwide IKEA Retail Sales (€B)
+            </h2>
+
+            <p class="text-sm text-slate-600 mb-3">
+                Historical comparison of worldwide IKEA retail sales across FY2022–FY2026.
+            </p>
+
+            <div class="chart-container">
+                <canvas id="retailSalesChart"></canvas>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ANALYSIS DIRECTLY UNDER OPERATING INCOME AND SALES -->
+
+    <section class="section-card">
+
+        <h2 class="text-lg font-bold text-slate-900 mb-4">
+            Analysis & Split Graph Insights
+        </h2>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm text-left">
+
+                <thead class="bg-slate-100 text-slate-700">
+                    <tr>
+                        <th class="p-3 rounded-l-lg">Financial Metric</th>
+                        <th class="p-3">FY2024</th>
+                        <th class="p-3">FY2025</th>
+                        <th class="p-3">FY2026</th>
+                        <th class="p-3 rounded-r-lg">FY24–FY26 Change</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    <tr>
+                        <td class="p-3 font-semibold">Retail Sales (€B)</td>
+                        <td class="p-3">45.10</td>
+                        <td class="p-3">44.60</td>
+                        <td class="p-3">43.80</td>
+                        <td class="p-3 text-red-600 font-semibold">−1.30B</td>
+                    </tr>
+
+                    <tr>
+                        <td class="p-3 font-semibold">Total Operating Income (€B)</td>
+                        <td class="p-3">26.50</td>
+                        <td class="p-3">26.306</td>
+                        <td class="p-3">25.864</td>
+                        <td class="p-3 text-red-600 font-semibold">−0.636B</td>
+                    </tr>
+
+                    <tr>
+                        <td class="p-3 font-semibold">Net Profit (€B)</td>
+                        <td class="p-3">2.20</td>
+                        <td class="p-3">1.50</td>
+                        <td class="p-3">1.40</td>
+                        <td class="p-3 text-red-600 font-semibold">−0.80B</td>
+                    </tr>
+
+                    <tr>
+                        <td class="p-3 font-semibold">Operating Margin (%)</td>
+                        <td class="p-3">—</td>
+                        <td class="p-3">6.56</td>
+                        <td class="p-3">5.64</td>
+                        <td class="p-3 text-red-600 font-semibold">−0.92 pp</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- COST STRUCTURE AND RECOMMENDATIONS SIDE BY SIDE -->
+
+    <section class="financial-grid">
+
+        <!-- RAW MATERIALS AND OPEX -->
+
+        <div class="section-card">
+
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Raw Materials, Consumables & Other Operating Expenses (€B)
+            </h2>
+
+            <p class="text-sm text-slate-600 mb-3">
+                Comparison of raw materials and consumables against other operating expenses and labour.
+            </p>
+
+            <div class="chart-container">
+                <canvas id="costComparisonChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <!-- STRATEGIC RECOMMENDATIONS -->
+
+        <section class="section-card bg-slate-900 text-white">
+
+            <h2 class="text-lg font-bold mb-4 text-blue-400">
+                Strategic Recommendations
+            </h2>
+
+            <ul class="space-y-4 text-sm text-slate-300">
+
+                <li>
+                    <strong class="text-white">1. Cap Non-Core OpEx:</strong>
+                    Set strict ceilings on operational expense growth.
+                </li>
+
+                <li>
+                    <strong class="text-white">2. Vertical Integration:</strong>
+                    Improve control over procurement and input costs.
+                </li>
+
+                <li>
+                    <strong class="text-white">3. Franchise Expansion:</strong>
+                    Continue developing retail and franchise opportunities.
+                </li>
+
+            </ul>
+
+            <div class="mt-5 pt-3 border-t border-slate-700 text-xs text-slate-400">
+                Project Scope: Static dashboard designed for GitHub Pages or Vercel.
+            </div>
+
+        </section>
+
+    </section>
+
+
+    <!-- NET PROFIT GRAPH BELOW COST STRUCTURE AND RECOMMENDATIONS -->
+
+    <section class="section-card">
+
+        <h2 class="text-lg font-bold text-slate-900 mb-2">
+            Net Profit (€B)
+        </h2>
+
+        <p class="text-sm text-slate-600 mb-3">
+            Comparison of net profit across FY2024–FY2026.
+        </p>
+
+        <div class="chart-container">
+            <canvas id="netProfitChart"></canvas>
+        </div>
+
+
+        <!-- EXACT NET RESULT FIGURES -->
+
+        <div class="mt-5 border-t border-slate-200 pt-5">
+
+            <h3 class="text-base font-bold text-slate-900 mb-3">
+                Net Result by Financial Year (€ Millions)
+            </h3>
+
+            <div class="net-result-grid">
+
+                <div class="net-result-item">
+                    <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                        FY2024
+                    </p>
+
+                    <p id="netResultFY24" class="text-xl font-bold text-slate-900 mt-2">
+                        €2,199M
+                    </p>
+                </div>
+
+                <div class="net-result-item">
+                    <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                        FY2025
+                    </p>
+
+                    <p id="netResultFY25" class="text-xl font-bold text-slate-900 mt-2">
+                        €1,496M
+                    </p>
+                </div>
+
+                <div class="net-result-item">
+                    <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                        FY2026
+                    </p>
+
+                    <p id="netResultFY26" class="text-xl font-bold text-slate-900 mt-2">
+                        €1,399M
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- GEOGRAPHICAL PIE CHARTS AT THE BOTTOM -->
+
+    <section class="section-card">
+
+        <h2 class="text-lg font-bold text-slate-900">
+            Geographical Distribution of Operating Income
+        </h2>
+
+        <p class="text-sm text-slate-600 mt-1 mb-4">
+            Comparison of regional operating income in EUR millions.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="border border-slate-100 rounded-lg p-3">
+
+                <h3 class="text-center font-bold mb-2">
+                    FY2025
+                </h3>
+
+                <div class="pie-container">
+                    <canvas id="fy25GeoChart"></canvas>
+                </div>
+
+            </div>
+
+            <div class="border border-slate-100 rounded-lg p-3">
+
+                <h3 class="text-center font-bold mb-2">
+                    FY2026
+                </h3>
+
+                <div class="pie-container">
+                    <canvas id="fy26GeoChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="bg-slate-900 text-slate-400 py-4 mt-6 border-t border-slate-800">
+
+    <div class="max-w-7xl mx-auto px-6 text-center text-xs">
+
+        <p>
+            Data Source: Inter IKEA Holding B.V. Annual Report FY26
+            and supplied FY2024 financial figures.
+            Financial figures reported in EUR billions unless otherwise indicated.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+// ==========================================
+// LOAD FINANCIAL DATA
+// ==========================================
+
+const financial = window.ikeaFinancialData;
+
+if (!financial) {
+    throw new Error(
+        "data.js was not loaded. Check that it is in the same folder as index.html."
+    );
+}
+
+const getMetric = name => financial.metrics.find(
+    item => item.category === name
+);
+
+const salesGoods = getMetric("Total Operating Income");
+const rawMaterials = getMetric("Cost of Raw Materials & Consumables");
+const otherOpex = getMetric("Other Operating Expenses & Labour");
+const netProfit = getMetric("Net Profit");
+
+const colors = {
+    navy: "#1E3A8A",
+    teal: "#0D9488",
+    amber: "#F59E0B",
+    purple: "#8B5CF6",
+    red: "#EF4444",
+    green: "#16A34A",
+    blue: "#3B82F6",
+    pink: "#EC4899",
+    grey: "#94A3B8"
+};
+
+const yearColors = [
+    colors.navy,
+    colors.teal,
+    colors.amber
+];
+
+const historicalSalesColors = [
+    colors.purple,
+    colors.blue,
+    colors.navy,
+    colors.teal,
+    colors.amber
+];
+
+
+// ==========================================
+// DISPLAY EXACT NET RESULT FIGURES
+// ==========================================
+
+const netResults = financial.netResultMillions;
+
+document.getElementById("netResultFY24").textContent =
+    "€" + netResults.fy24.toLocaleString("en-US") + "M";
+
+document.getElementById("netResultFY25").textContent =
+    "€" + netResults.fy25.toLocaleString("en-US") + "M";
+
+document.getElementById("netResultFY26").textContent =
+    "€" + netResults.fy26.toLocaleString("en-US") + "M";
+
+
+// ==========================================
+// COMMON CHART OPTIONS
+// ==========================================
+
+const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+
+    layout: {
+        padding: {
+            top: 30,
+            right: 55,
+            bottom: 8,
+            left: 8
+        }
+    },
+
+    plugins: {
+        legend: {
+            position: "bottom",
+
+            labels: {
+                boxWidth: 12,
+                padding: 15,
+                font: {
+                    size: 11
+                }
+            }
+        },
+
+        tooltip: {
+            callbacks: {
+                label: context =>
+                    context.dataset.label + ": €" +
+                    Number(context.raw).toFixed(2) + "B"
+            }
+        }
+    },
+
+    scales: {
+
+        y: {
+            beginAtZero: true,
+
+            grid: {
+                color: "#F1F5F9"
+            },
+
+            ticks: {
+                callback: value => "€" + value + "B"
+            }
+        },
+
+        x: {
+            grid: {
+                display: false
+            }
+        }
+
+    }
+};
+
+
+// ==========================================
+// BAR VALUE LABELS
+// ==========================================
+
+const valueLabels = {
+
+    id: "valueLabels",
+
+    afterDatasetsDraw(chart) {
+
+        if (chart.config.type !== "bar") return;
+
+        const { ctx, chartArea } = chart;
+
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+
+            const meta = chart.getDatasetMeta(datasetIndex);
+
+            meta.data.forEach((bar, index) => {
+
+                const value = dataset.data[index];
+
+                if (value === null || value === undefined) return;
+
+                const position = bar.tooltipPosition();
+
+                ctx.save();
+
+                ctx.fillStyle = "#334155";
+                ctx.font = "bold 11px Arial";
+                ctx.textBaseline = "middle";
+
+                if (chart.options.indexAxis === "y") {
+
+                    ctx.textAlign = "left";
+
+                    const label = "€" + Number(value).toFixed(2) + "B";
+
+                    ctx.fillText(
+                        label,
+                        Math.min(position.x + 9, chartArea.right - 48),
+                        position.y
+                    );
+
+                } else {
+
+                    ctx.textAlign = "center";
+
+                    ctx.fillText(
+                        "€" + Number(value).toFixed(2) + "B",
+                        position.x,
+                        position.y - 13
+                    );
+
+                }
+
+                ctx.restore();
+
+            });
+
+        });
+
+    }
+
+};
+
+Chart.register(valueLabels);
+
+
+// ==========================================
+// COMMON BAR DATASET SETTINGS
+// ==========================================
+
+function createBarDataset(label, data, backgroundColor) {
+
+    return {
+        label,
+        data,
+        backgroundColor,
+        borderRadius: 4,
+        barThickness: 32,
+        maxBarThickness: 36,
+        categoryPercentage: 0.85,
+        barPercentage: 0.90
+    };
+
+}
+
+
+// ==========================================
+// TOTAL OPERATING INCOME
+// ==========================================
+
+new Chart(
+    document.getElementById("salesGoodsChart"),
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: ["FY2024", "FY2025", "FY2026"],
+
+            datasets: [
+
+                createBarDataset(
+                    "Total Operating Income (€B)",
+                    [
+                        salesGoods.fy24,
+                        salesGoods.fy25,
+                        salesGoods.fy26
+                    ],
+                    yearColors
+                )
+
+            ]
+
+        },
+
+        options: {
+
+            ...commonOptions,
+
+            plugins: {
+                ...commonOptions.plugins,
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 32,
+
+                    grid: {
+                        color: "#F1F5F9"
+                    },
+
+                    ticks: {
+                        callback: value => "€" + value + "B"
+                    }
+                },
+
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// WORLDWIDE IKEA RETAIL SALES
+// HISTORICAL HORIZONTAL BAR GRAPH
+// FY2022–FY2026
+// ==========================================
+
+new Chart(
+    document.getElementById("retailSalesChart"),
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: [
+                "FY2022",
+                "FY2023",
+                "FY2024",
+                "FY2025",
+                "FY2026"
+            ],
+
+            datasets: [
+
+                {
+                    label: "Worldwide IKEA Retail Sales (€B)",
+
+                    data: [
+                        financial.worldwideRetailSales.fy22,
+                        financial.worldwideRetailSales.fy23,
+                        financial.worldwideRetailSales.fy24,
+                        financial.worldwideRetailSales.fy25,
+                        financial.worldwideRetailSales.fy26
+                    ],
+
+                    backgroundColor: historicalSalesColors,
+
+                    borderRadius: 4,
+
+                    barThickness: 27,
+                    maxBarThickness: 32
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            ...commonOptions,
+
+            indexAxis: "y",
+
+            plugins: {
+                ...commonOptions.plugins,
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+
+                x: {
+                    beginAtZero: true,
+                    suggestedMax: 52,
+
+                    grid: {
+                        color: "#F1F5F9"
+                    },
+
+                    ticks: {
+                        callback: value => "€" + value + "B"
+                    }
+                },
+
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// NET PROFIT - HORIZONTAL BAR GRAPH
+// ==========================================
+
+new Chart(
+    document.getElementById("netProfitChart"),
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: ["FY2024", "FY2025", "FY2026"],
+
+            datasets: [
+
+                {
+                    label: "Net Profit (€B)",
+
+                    data: [
+                        netProfit.fy24,
+                        netProfit.fy25,
+                        netProfit.fy26
+                    ],
+
+                    backgroundColor: yearColors,
+
+                    borderRadius: 4,
+
+                    barThickness: 32,
+                    maxBarThickness: 36
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            ...commonOptions,
+
+            indexAxis: "y",
+
+            plugins: {
+                ...commonOptions.plugins,
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+
+                x: {
+                    beginAtZero: true,
+                    suggestedMax: 2.8,
+
+                    grid: {
+                        color: "#F1F5F9"
+                    },
+
+                    ticks: {
+                        callback: value => "€" + value + "B"
+                    }
+                },
+
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// COST STRUCTURE COMPARISON
+// ==========================================
+
+new Chart(
+    document.getElementById("costComparisonChart"),
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: [
+                "Raw Materials & Consumables",
+                "Other OpEx & Labour"
+            ],
+
+            datasets: [
+
+                createBarDataset(
+                    "FY2025 (€B)",
+                    [
+                        rawMaterials.fy25,
+                        otherOpex.fy25
+                    ],
+                    colors.navy
+                ),
+
+                createBarDataset(
+                    "FY2026 (€B)",
+                    [
+                        rawMaterials.fy26,
+                        otherOpex.fy26
+                    ],
+                    colors.teal
+                )
+
+            ]
+
+        },
+
+        options: {
+
+            ...commonOptions,
+
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 25,
+
+                    grid: {
+                        color: "#F1F5F9"
+                    },
+
+                    ticks: {
+                        callback: value => "€" + value + "B"
+                    }
+                },
+
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// PIE CHART PERCENTAGE LABELS
+// ==========================================
+
+const percentageLabels = {
+
+    id: "percentageLabels",
+
+    afterDatasetsDraw(chart) {
+
+        if (chart.config.type !== "pie") return;
+
+        const ctx = chart.ctx;
+        const dataset = chart.data.datasets[0];
+
+        const total = dataset.data.reduce(
+            (sum, value) => sum + value,
+            0
+        );
+
+        chart.getDatasetMeta(0).data.forEach((arc, index) => {
+
+            const percentage = (
+                dataset.data[index] / total * 100
+            ).toFixed(1);
+
+            const angle = (arc.startAngle + arc.endAngle) / 2;
+
+            const radius =
+                arc.innerRadius +
+                (arc.outerRadius - arc.innerRadius) * 0.57;
+
+            const x = arc.x + Math.cos(angle) * radius;
+            const y = arc.y + Math.sin(angle) * radius;
+
+            ctx.save();
+
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "bold 12px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            ctx.fillText(percentage + "%", x, y);
+
+            ctx.restore();
+
+        });
+
+    }
+
+};
+
+Chart.register(percentageLabels);
+
+
+// ==========================================
+// GEOGRAPHICAL DISTRIBUTION PIE CHARTS
+// ==========================================
+
+const geo = financial.geographicalIncome;
+
+if (geo && geo.regions && geo.fy25 && geo.fy26) {
+
+    const geoOptions = {
+
+        responsive: true,
+        maintainAspectRatio: false,
+
+        layout: {
+            padding: 8
+        },
+
+        plugins: {
+
+            legend: {
+                position: "bottom",
+
+                labels: {
+                    padding: 12,
+                    boxWidth: 12,
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+
+            tooltip: {
+
+                callbacks: {
+
+                    label: context => {
+
+                        const total = context.dataset.data.reduce(
+                            (a, b) => a + b,
+                            0
+                        );
+
+                        const percentage = (
+                            context.raw / total * 100
+                        ).toFixed(1);
+
+                        return context.label + ": €" +
+                            context.raw.toLocaleString() +
+                            "M (" + percentage + "%)";
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    };
+
+
+    function createGeoChart(id, year, palette) {
+
+        new Chart(
+            document.getElementById(id),
+            {
+
+                type: "pie",
+
+                data: {
+
+                    labels: geo.regions,
+
+                    datasets: [{
+
+                        data: year.values,
+
+                        backgroundColor: palette,
+
+                        borderColor: "#FFFFFF",
+                        borderWidth: 3,
+                        hoverOffset: 10
+
+                    }]
+
+                },
+
+                options: geoOptions
+
+            }
+        );
+
+    }
+
+
+    // FY2025 colour palette
+
+    createGeoChart(
+        "fy25GeoChart",
+        geo.fy25,
+        [
+            "#1E3A8A",
+            "#0D9488",
+            "#F59E0B"
+        ]
+    );
+
+
+    // FY2026 colour palette
+
+    createGeoChart(
+        "fy26GeoChart",
+        geo.fy26,
+        [
+            "#7C3AED",
+            "#EC4899",
+            "#06B6D4"
+        ]
+    );
+
+} else {
+
+    console.warn(
+        "Geographical income data is missing from data.js."
+    );
+
+}
+
+</script>
+
+</body>
+</html>
